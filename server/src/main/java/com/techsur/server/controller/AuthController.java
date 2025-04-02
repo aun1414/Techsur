@@ -8,12 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import com.techsur.server.dto.LoginRequest;
+import com.techsur.server.security.JwtUtil;
+
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -34,4 +42,28 @@ public class AuthController {
         userRepository.save(newUser);
         return "User registered successfully!";
     }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+            .orElse(null);
+
+        if (user == null) {
+            return "User not found!";
+        }
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            return "Invalid password!";
+        }
+
+        try {
+            String token = jwtUtil.generateToken(user.getEmail());
+            return token;
+        } catch (Exception e) {
+            e.printStackTrace();  // Print full error in console
+            return "Token generation failed: " + e.getMessage();
+        }
+    }
+
+
 }
