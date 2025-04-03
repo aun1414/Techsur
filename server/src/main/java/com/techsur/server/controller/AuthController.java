@@ -5,6 +5,7 @@ import com.techsur.server.model.User;
 import com.techsur.server.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,6 +64,12 @@ public class AuthController {
             e.printStackTrace();  // Print full error in console
             return "Token generation failed: " + e.getMessage();
         }
+    }
+
+    @GetMapping("/me")
+    public String getCurrentUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return "Hello again, " + email + "! You are authenticated.";
     }
 
 
