@@ -12,6 +12,7 @@ import com.techsur.server.repository.ResumeUploadRepository;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/resume")
@@ -49,5 +50,12 @@ public class ResumeController {
             return ResponseEntity.status(500).body("Failed to upload resume.");
         }
     }
+    @GetMapping("/list")
+    public ResponseEntity<List<ResumeUpload>> listResumes() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<ResumeUpload> uploads = resumeUploadRepository.findByEmail(email);
+        return ResponseEntity.ok(uploads);
+}
+
 
 }
