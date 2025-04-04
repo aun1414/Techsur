@@ -28,7 +28,7 @@ public class ResumeUpload {
         this.uploadTime = uploadTime;
     }
 
-    // Getters and setters...
+
     public Long getId() {
         return id;
     }

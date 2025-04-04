@@ -2,10 +2,39 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-
+import fitz  # for PDF
+import docx  # for DOCX
+import os
 
 app = Flask(__name__)
 CORS(app)  
+
+def extract_text(file_storage):
+    filename = file_storage.filename.lower()
+
+    # Save file temporarily to read it
+    temp_path = "temp_" + filename
+    file_storage.save(temp_path)
+
+    if filename.endswith(".pdf"):
+        return extract_pdf_text(temp_path)
+    elif filename.endswith(".docx"):
+        return extract_docx_text(temp_path)
+    else:
+        return file_storage.read().decode('utf-8', errors='ignore')
+
+def extract_pdf_text(path):
+    text = ""
+    doc = fitz.open(path)
+    for page in doc:
+        text += page.get_text()
+    doc.close()
+    return text
+
+def extract_docx_text(path):
+    doc = docx.Document(path)
+    return "\n".join([para.text for para in doc.paragraphs])
+
 
 @app.route('/match', methods=['POST'])
 def match():
@@ -14,8 +43,9 @@ def match():
         resume_file = request.files['resume']
         job_file = request.files['job']
 
-        resume_text = resume_file.read().decode('utf-8')
-        job_text = job_file.read().decode('utf-8')
+        resume_text = extract_text(resume_file)
+        job_text = extract_text(job_file)
+
 
         vectorizer = TfidfVectorizer()
         tfidf_matrix = vectorizer.fit_transform([resume_text, job_text])
