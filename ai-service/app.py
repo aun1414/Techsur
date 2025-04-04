@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 
 app = Flask(__name__)
 CORS(app)  
@@ -14,12 +17,12 @@ def match():
         resume_text = resume_file.read().decode('utf-8')
         job_text = job_file.read().decode('utf-8')
 
-        #Simulated AI logic (mocked for now)
-        # Later, you can replace this with OpenAI, HuggingFace, or custom model
-        mock_score = 92.4
+        vectorizer = TfidfVectorizer()
+        tfidf_matrix = vectorizer.fit_transform([resume_text, job_text])
+        similarity_score = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0] * 100
 
         return jsonify({
-            "match": mock_score,
+            "match": round(similarity_score, 2),
             "resume_preview": resume_text[:100],
             "job_preview": job_text[:100]
         })
