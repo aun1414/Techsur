@@ -1,0 +1,14 @@
+We're seeking a Full Stack Developer with strong proficiency in Java and Spring Boot to lead backend services for modern web applications. The ideal candidate will have hands-on experience building secure APIs, managing relational databases like PostgreSQL, and integrating with frontend technologies using React.js or Next.js. 
+
+Responsibilities include:
+- Developing and maintaining RESTful services using Spring Boot
+- Collaborating with frontend developers on seamless integrations
+- Implementing CI/CD pipelines using GitHub Actions or similar tools
+- Managing cloud-based deployments and working with Docker
+
+Bonus if you have experience with:
+- GraphQL
+- Blockchain or smart contract development
+- AI/ML workflows or Python-based microservices
+
+We value candidates who demonstrate technical breadth, strong project contributions, and a proactive learning mindset.
