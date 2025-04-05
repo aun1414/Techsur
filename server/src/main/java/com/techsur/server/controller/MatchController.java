@@ -9,7 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,10 +18,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import com.techsur.server.repository.MatchResultRepository;
+import com.techsur.server.model.MatchResult;
+import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
 public class MatchController {
+    @Autowired
+    private MatchResultRepository matchResultRepository;
+
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -29,10 +39,10 @@ public class MatchController {
     public ResponseEntity<?> matchFiles(@RequestParam("resume") MultipartFile resume,
                                         @RequestParam("job") MultipartFile job) {
         try {
-            //String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
             // Prepare the request to Flask microservice
-            String flaskUrl = "http://localhost:5000/match"; // Update later when deployed
+            String flaskUrl = "http://localhost:5000/match";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -61,6 +71,20 @@ public class MatchController {
             new ParameterizedTypeReference<Map<String, Object>>() {}
             );
 
+            Map<String, Object> responseBody = response.getBody();
+            if (responseBody == null || !responseBody.containsKey("match")) {
+                return ResponseEntity.status(500).body("Flask response missing or invalid.");
+            }
+            double matchScore = Double.parseDouble(responseBody.get("match").toString());
+            MatchResult result = new MatchResult(
+            email,
+            resume.getOriginalFilename(),
+            job.getOriginalFilename(),
+            matchScore,
+            LocalDateTime.now()
+            );
+
+            matchResultRepository.save(result);
 
             // Return the AI result to frontend
             return ResponseEntity.ok(response.getBody());
@@ -70,4 +94,24 @@ public class MatchController {
             return ResponseEntity.status(500).body("Matching failed.");
         }
     }
+    @GetMapping("/match/history")
+    public ResponseEntity<?> getMatchHistory() {
+        try {
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+            List<MatchResult> matches = matchResultRepository.findByEmail(email);
+
+            //Sort by timestamp descending
+            List<MatchResult> sorted = matches.stream()
+                .sorted((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()))
+                .collect(Collectors.toList());
+
+            return ResponseEntity.ok(sorted);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to fetch match history.");
+        }
+    }
+
 }
