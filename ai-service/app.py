@@ -2,9 +2,11 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import fitz  # for PDF
-import docx  # for DOCX
+import fitz 
+import docx  
 import os
+from sentence_transformers import SentenceTransformer, util
+bert_model = SentenceTransformer('all-MiniLM-L6-v2')
 
 app = Flask(__name__)
 CORS(app)  
@@ -47,9 +49,8 @@ def match():
         job_text = extract_text(job_file)
 
 
-        vectorizer = TfidfVectorizer()
-        tfidf_matrix = vectorizer.fit_transform([resume_text, job_text])
-        similarity_score = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0] * 100
+        embeddings = bert_model.encode([resume_text, job_text], convert_to_tensor=True)
+        similarity_score = util.pytorch_cos_sim(embeddings[0], embeddings[1]).item() * 100
 
         return jsonify({
             "match": round(similarity_score, 2),
