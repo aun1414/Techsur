@@ -5,14 +5,17 @@ from sklearn.metrics.pairwise import cosine_similarity
 import fitz 
 import docx  
 import os
-import openai
+from openai import OpenAI
 
 from sentence_transformers import SentenceTransformer, util
 bert_model = SentenceTransformer('all-MiniLM-L6-v2')
 
 from dotenv import load_dotenv
 load_dotenv()  # Loads the .env file into environment variables
-#client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENAI_API_KEY")
+)
 
 app = Flask(__name__)
 CORS(app)  
@@ -47,25 +50,30 @@ def extract_docx_text(path):
     doc = docx.Document(path)
     return "\n".join([para.text for para in doc.paragraphs])
 
-# def generate_fit_summary(resume_text, job_text):
-#     prompt = f"""Given the following resume and job description, explain why this candidate is a good fit for the job in 2-3 sentences.
 
-# Resume:
-# {resume_text[:1500]}
+def generate_fit_summary(resume_text, job_text):
+    prompt = f"""
+Compare the following resume and job description and explain in simple terms why the candidate is a good or bad fit. Keep it concise.
 
-# Job Description:
-# {job_text[:1500]}
+Resume:
+{resume_text}
 
-# Fit Explanation:"""
+Job Description:
+{job_text}
+"""
 
-#     response = client.chat.completions.create(
-#         model="gpt-3.5-turbo",
-#         messages=[{"role": "user", "content": prompt}],
-#         max_tokens=150,
-#         temperature=0.7
-#     )
+    completion = client.chat.completions.create(
+        model="deepseek/deepseek-v3-base:free",  # You can change this model
+        messages=[{"role": "user", "content": prompt}],
+        extra_headers={
+            "HTTP-Referer": "http://localhost:3000",  # Optional, your frontend URL
+            "X-Title": "Smart Resume Screener",       # Optional, your app name
+        },
+        extra_body={}
+    )
 
-#     return response['choices'][0]['message']['content'].strip()
+    return completion.choices[0].message.content
+
 
 
 @app.route('/match', methods=['POST'])
@@ -82,10 +90,10 @@ def match():
         embeddings = bert_model.encode([resume_text, job_text], convert_to_tensor=True)
         similarity_score = util.pytorch_cos_sim(embeddings[0], embeddings[1]).item() * 100
 
-        #fit_summary = generate_fit_summary(resume_text, job_text)
+        fit_summary = generate_fit_summary(resume_text, job_text)
         return jsonify({
             "match": round(similarity_score, 2),
-            ##summary": fit_summary,
+            "summary": fit_summary,
             "resume_preview": resume_text[:100],
             "job_preview": job_text[:100]
         })
