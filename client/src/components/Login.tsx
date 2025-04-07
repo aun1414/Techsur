@@ -17,7 +17,7 @@ const Login: React.FC = () => {
       });
 
       localStorage.setItem('token', response.data); // Save JWT
-      navigate('/'); // Go to Upload page
+      navigate('/upload'); // Go to Upload page
     } catch (err) {
       console.error(err);
       setError('Invalid credentials');
