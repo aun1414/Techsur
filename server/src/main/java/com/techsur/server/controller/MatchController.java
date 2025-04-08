@@ -23,9 +23,12 @@ import com.techsur.server.model.MatchResult;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -116,5 +119,10 @@ public class MatchController {
             return ResponseEntity.status(500).body("Failed to fetch match history.");
         }
     }
+    @DeleteMapping("/match/{id}")
+    public ResponseEntity<?> deleteMatch(@PathVariable Long id) {
+        matchResultRepository.deleteById(id);
+        return ResponseEntity.ok("Deleted match with ID: " + id);
+}
 
 }
