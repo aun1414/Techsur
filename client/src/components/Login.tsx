@@ -26,13 +26,13 @@ const Login: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow space-y-4">
-      <h2 className="text-xl font-bold text-center">Login</h2>
+      <h2 className="text-xl text-black font-bold text-center">Login</h2>
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <form onSubmit={handleLogin} className="space-y-4">
         <input
           type="email"
           placeholder="Email"
-          className="w-full border px-4 py-2 rounded"
+          className="w-full text-black border px-4 py-2 rounded"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -40,7 +40,7 @@ const Login: React.FC = () => {
         <input
           type="password"
           placeholder="Password"
-          className="w-full border px-4 py-2 rounded"
+          className="w-full text-black border px-4 py-2 rounded"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -49,7 +49,7 @@ const Login: React.FC = () => {
           Login
         </button>
       </form>
-      <p className="text-sm text-center">
+      <p className="text-sm text-black text-center">
         Don’t have an account? <a href="/signup" className="text-blue-600 underline">Sign up</a>
       </p>
     </div>
