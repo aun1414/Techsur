@@ -12,6 +12,7 @@ import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
+    <div className="dark min-h-screen bg-black text-white font-sans">
     <Router>
       <Navbar />
       <Routes>
@@ -36,6 +37,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
       </Routes>
     </Router>
+  </div>
   );
 }
 

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getAuthHeaders } from '../utils/auth';
+import { Trash2 } from 'lucide-react';
+
 
 interface MatchEntry {
   id: number;
@@ -57,6 +59,12 @@ const MatchHistory: React.FC = () => {
     }
   };
 
+
+  const formatDate = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString(); // You can customize this
+  };
+  
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl shadow space-y-4">
       <h2 className="text-2xl font-bold text-center text-gray-800">Your Match History</h2>
@@ -71,22 +79,31 @@ const MatchHistory: React.FC = () => {
       <div className="space-y-4">
         {paginatedMatches.map((match) => (
           <div key={match.id} className="bg-gray-50 p-4 rounded border">
-            <p><strong>Match Score:</strong> {match.matchScore.toFixed(2)}</p>
-            <p><strong>Resume:</strong> {match.resumeFile}</p>
-            <p><strong>Job:</strong> {match.jobFile}</p>
-            <p className="text-sm text-gray-500">
-              <strong>Matched On:</strong> {new Date(match.timestamp).toLocaleString()}
-            </p>
-            <button
-              onClick={() => handleDelete(match.id)}
-              className="text-red-600 hover:underline text-sm"
-            >
-              Delete
-            </button>
+            
+            {/* Move `relative` here */}
+            <div className="relative border rounded-xl shadow p-4 bg-white">
+              {/* Floating delete button */}
+              <button
+                onClick={() => handleDelete(match.id)}
+                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                title="Delete"
+              >
+                <Trash2 size={18} />
+              </button>
 
+              <h3 className="font-semibold text-gray-600 text-lg">Match: {match.matchScore}%</h3>
+              <p className="text-sm text-gray-600">Resume: {match.resumeFile}</p>
+              <p className="text-sm text-gray-600">Job: {match.jobFile}</p>
+              <p className="text-xs text-gray-400 mt-2">
+                Uploaded: {formatDate(match.timestamp)}
+              </p>
+            </div>
+            
           </div>
         ))}
       </div>
+
+
       <div className="flex justify-center gap-2 mt-6">
       {Array.from({ length: totalPages }, (_, i) => (
         <button
