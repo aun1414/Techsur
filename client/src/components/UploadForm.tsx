@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { getAuthHeaders } from '../utils/auth';
+import { Upload, FileText, Loader2 } from 'lucide-react';
 
 const UploadForm: React.FC = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
@@ -36,43 +37,75 @@ const UploadForm: React.FC = () => {
     }
   };
 
+  const FileDisplay = ({ file }: { file: File | null }) => (
+    file ? (
+      <div className="mt-2 flex items-center text-sm text-gray-300 gap-2">
+        <FileText size={16} />
+        <span className="truncate">{file.name}</span>
+      </div>
+    ) : null
+  );
+
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center px-4 py-10">
-      <div className="bg-zinc-900 border border-zinc-800 rounded-xl shadow-lg max-w-xl w-full p-8 space-y-6">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl max-w-xl w-full p-8 space-y-6">
         <h2 className="text-3xl font-bold text-center">AI Resume Matcher</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block mb-1 text-sm text-gray-300">Resume File (.pdf/.txt)</label>
+          {/* Resume Upload */}
+          <div className="border-2 border-dashed border-gray-700 rounded-lg p-4 bg-zinc-800 text-center hover:border-gray-500 transition">
+            <label className="block text-sm text-gray-400 mb-2">Upload Resume (.pdf/.txt)</label>
             <input
               type="file"
+              accept=".pdf,.txt"
               onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
-              className="w-full bg-zinc-800 border border-gray-700 px-4 py-2 rounded text-white"
-              required
+              className="w-full opacity-0 h-0"
+              id="resume-upload"
             />
+            <label htmlFor="resume-upload" className="cursor-pointer inline-flex items-center gap-2 text-gray-200 hover:text-white">
+              <Upload size={18} />
+              {resumeFile ? "Change File" : "Choose File"}
+            </label>
+            <FileDisplay file={resumeFile} />
           </div>
 
-          <div>
-            <label className="block mb-1 text-sm text-gray-300">Job Description File (.txt)</label>
+          {/* Job Upload */}
+          <div className="border-2 border-dashed border-gray-700 rounded-lg p-4 bg-zinc-800 text-center hover:border-gray-500 transition">
+            <label className="block text-sm text-gray-400 mb-2">Upload Job Description (.pdf/.txt)</label>
             <input
               type="file"
+              accept=".pdf,.txt"
               onChange={(e) => setJobFile(e.target.files?.[0] || null)}
-              className="w-full bg-zinc-800 border border-gray-700 px-4 py-2 rounded text-white"
-              required
+              className="w-full opacity-0 h-0"
+              id="job-upload"
             />
+            <label htmlFor="job-upload" className="cursor-pointer inline-flex items-center gap-2 text-gray-200 hover:text-white">
+              <Upload size={18} />
+              {jobFile ? "Change File" : "Choose File"}
+            </label>
+            <FileDisplay file={jobFile} />
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-white text-black font-semibold py-2 px-4 rounded hover:opacity-90 transition disabled:opacity-50"
+            className="w-full bg-white text-black font-semibold py-2 px-4 rounded hover:opacity-90 transition disabled:opacity-50 flex items-center justify-center gap-2"
             disabled={loading}
           >
-            {loading ? 'Matching...' : 'Match Resume with Job'}
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin" size={16} /> Matching...
+              </>
+            ) : (
+              "Match Resume with Job"
+            )}
           </button>
         </form>
 
+        {/* Error */}
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
+        {/* Result */}
         {result && (
           <div className="mt-6 bg-zinc-800 p-4 rounded border border-zinc-700 text-sm">
             <h3 className="font-semibold text-lg mb-2 text-white">Match Result</h3>

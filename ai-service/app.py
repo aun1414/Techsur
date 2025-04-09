@@ -7,6 +7,10 @@ import docx
 import os
 from openai import OpenAI
 
+import google.generativeai as genai
+
+
+
 from sentence_transformers import SentenceTransformer, util
 bert_model = SentenceTransformer('all-MiniLM-L6-v2')
 
@@ -15,6 +19,10 @@ load_dotenv()  # Loads the .env file into environment variables
 
 app = Flask(__name__)
 CORS(app)  
+
+# Load Gemini API key from environment
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+model = genai.GenerativeModel("gemini-1.5-flash")  # or "gemini-pro", etc.
 
 def extract_text(file_storage):
     filename = file_storage.filename.lower()
@@ -46,6 +54,26 @@ def extract_docx_text(path):
     doc = docx.Document(path)
     return "\n".join([para.text for para in doc.paragraphs])
 
+def analyze_with_gemini(resume_text, job_text):
+    prompt = f"""
+You are an expert resume evaluator. Given the resume and job description below, do the following:
+
+1. Provide a short summary analyzing the candidate's **fit** for the job (strengths & weaknesses).
+2. List 5–10 **key skills** found in the resume that match the job.
+3. List any relevant **past experiences** or accomplishments.
+4. Extract important **keywords** from the job description.
+5. Provide a **1–sentence explanation** of the match score.
+
+Resume:
+{resume_text}
+
+Job Description:
+{job_text}
+    """
+
+    response = model.generate_content(prompt)
+    return response.text
+
 
 @app.route('/match', methods=['POST'])
 def match():
@@ -60,11 +88,12 @@ def match():
 
         embeddings = bert_model.encode([resume_text, job_text], convert_to_tensor=True)
         similarity_score = util.pytorch_cos_sim(embeddings[0], embeddings[1]).item() * 100
-
+        analysis = analyze_with_gemini(resume_text, job_text)
         return jsonify({
             "match": round(similarity_score, 2),
             "resume_preview": resume_text[:100],
-            "job_preview": job_text[:100]
+            "job_preview": job_text[:100],
+            "analysis": analysis
         })
 
     except Exception as e:
