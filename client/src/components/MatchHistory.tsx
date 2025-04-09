@@ -66,57 +66,56 @@ const MatchHistory: React.FC = () => {
   };
   
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl shadow space-y-4">
-      <h2 className="text-2xl font-bold text-center text-gray-800">Your Match History</h2>
+    <div className="min-h-screen bg-black text-white px-4 py-10">
+      <div className="max-w-3xl mx-auto space-y-6">
+        <h2 className="text-3xl font-bold text-center">Your Match History</h2>
 
-      {loading && <p className="text-center text-gray-500">Loading...</p>}
-      {error && <p className="text-center text-red-500">{error}</p>}
+        {loading && <p className="text-center text-gray-400">Loading...</p>}
+        {error && <p className="text-center text-red-500">{error}</p>}
 
-      {!loading && history.length === 0 && (
-        <p className="text-center text-gray-600">No matches found yet.</p>
-      )}
+        {!loading && history.length === 0 && (
+          <p className="text-center text-gray-500">No matches found yet.</p>
+        )}
 
-      <div className="space-y-4">
-        {paginatedMatches.map((match) => (
-          <div key={match.id} className="bg-gray-50 p-4 rounded border">
-            
-            {/* Move `relative` here */}
-            <div className="relative border rounded-xl shadow p-4 bg-white">
-              {/* Floating delete button */}
+        <div className="space-y-4">
+          {paginatedMatches.map((match) => (
+            <div key={match.id} className="bg-zinc-900 border border-zinc-800 p-4 rounded-lg relative shadow-sm">
               <button
                 onClick={() => handleDelete(match.id)}
-                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                className="absolute top-4 right-4 text-red-500 hover:text-red-400"
                 title="Delete"
               >
                 <Trash2 size={18} />
               </button>
 
-              <h3 className="font-semibold text-gray-600 text-lg">Match: {match.matchScore}%</h3>
-              <p className="text-sm text-gray-600">Resume: {match.resumeFile}</p>
-              <p className="text-sm text-gray-600">Job: {match.jobFile}</p>
-              <p className="text-xs text-gray-400 mt-2">
-                Uploaded: {formatDate(match.timestamp)}
-              </p>
+              <h3 className="text-lg font-semibold text-white">Match: {match.matchScore}%</h3>
+              <p className="text-sm text-gray-300">Resume: {match.resumeFile}</p>
+              <p className="text-sm text-gray-300">Job: {match.jobFile}</p>
+              <p className="text-xs text-gray-500 mt-2">Uploaded: {formatDate(match.timestamp)}</p>
             </div>
-            
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center gap-2 mt-6">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-3 py-1 rounded border ${
+                currentPage === i + 1
+                  ? 'bg-white text-black font-semibold'
+                  : 'bg-zinc-800 text-gray-300 hover:bg-zinc-700'
+              } transition`}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
       </div>
-
-
-      <div className="flex justify-center gap-2 mt-6">
-      {Array.from({ length: totalPages }, (_, i) => (
-        <button
-          key={i}
-          onClick={() => setCurrentPage(i + 1)}
-          className={`px-3 py-1 border rounded ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'}`}
-        >
-          {i + 1}
-        </button>
-      ))}
-    </div>
     </div>
   );
 };
+
 
 export default MatchHistory;
