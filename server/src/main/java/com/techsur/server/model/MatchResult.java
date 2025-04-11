@@ -15,14 +15,18 @@ public class MatchResult {
     private String jobFile;
     private double matchScore;
     private LocalDateTime timestamp;
+    @Column(columnDefinition = "TEXT")
+    private String analysis;
+
 
     public MatchResult() {}
 
-    public MatchResult(String email, String resumeFile, String jobFile, double matchScore, LocalDateTime timestamp) {
+    public MatchResult(String email, String resumeFile, String jobFile, double matchScore, String analysis,LocalDateTime timestamp) {
         this.email = email;
         this.resumeFile = resumeFile;
         this.jobFile = jobFile;
         this.matchScore = matchScore;
+        this.analysis = analysis;
         this.timestamp = timestamp;
     }
 
@@ -62,6 +66,14 @@ public class MatchResult {
 
     public void setMatchScore(double matchScore) {
         this.matchScore = matchScore;
+    }
+
+    public String getAnalysis() {
+        return analysis;
+    }
+
+    public void setAnalysis(String analysis) {
+        this.analysis = analysis;
     }
 
     public LocalDateTime getTimestamp() {

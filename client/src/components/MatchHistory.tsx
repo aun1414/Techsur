@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getAuthHeaders } from '../utils/auth';
 import { Trash2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 
 interface MatchEntry {
@@ -92,6 +93,9 @@ const MatchHistory: React.FC = () => {
               <p className="text-sm text-gray-300">Resume: {match.resumeFile}</p>
               <p className="text-sm text-gray-300">Job: {match.jobFile}</p>
               <p className="text-xs text-gray-500 mt-2">Uploaded: {formatDate(match.timestamp)}</p>
+              <Link to={`/insight/${match.id}`} className="text-blue-400 underline text-sm mt-2 inline-block">
+                View Insights
+              </Link>
             </div>
           ))}
         </div>

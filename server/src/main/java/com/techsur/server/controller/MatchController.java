@@ -82,15 +82,18 @@ public class MatchController {
                 return ResponseEntity.status(500).body("Flask response missing or invalid.");
             }
             double matchScore = Double.parseDouble(responseBody.get("match").toString());
+            String analysis = responseBody.get("analysis").toString();
             MatchResult result = new MatchResult(
             email,
             resume.getOriginalFilename(),
             job.getOriginalFilename(),
             matchScore,
+            analysis,
             LocalDateTime.now()
             );
-
+            
             matchResultRepository.save(result);
+            responseBody.put("id", result.getId());
 
             // Return the AI result to frontend
             return ResponseEntity.ok(response.getBody());
@@ -119,10 +122,31 @@ public class MatchController {
             return ResponseEntity.status(500).body("Failed to fetch match history.");
         }
     }
+    
     @DeleteMapping("/match/{id}")
     public ResponseEntity<?> deleteMatch(@PathVariable Long id) {
         matchResultRepository.deleteById(id);
         return ResponseEntity.ok("Deleted match with ID: " + id);
-}
+    }
+    
+    @GetMapping("/match/{id}")
+    public ResponseEntity<?> getMatchById(@PathVariable Long id) {
+        try {
+            MatchResult match = matchResultRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Match not found"));
+
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            if (!match.getEmail().equals(email)) {
+                return ResponseEntity.status(403).body("Access denied");
+            }
+
+            return ResponseEntity.ok(match);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to fetch match.");
+        }
+    }
+
 
 }

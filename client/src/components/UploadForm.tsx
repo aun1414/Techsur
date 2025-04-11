@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { getAuthHeaders } from '../utils/auth';
 import { Upload, FileText, Loader2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const UploadForm: React.FC = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
@@ -116,6 +117,9 @@ const UploadForm: React.FC = () => {
                 <p><span className="text-green-400 font-medium">Score:</span> {result.match}%</p>
                 <p className="mt-2 text-gray-300"><strong>Resume Preview:</strong><br /><span className="text-white">{result.resume_preview}</span></p>
                 <p className="mt-2 text-gray-300"><strong>Job Preview:</strong><br /><span className="text-white">{result.job_preview}</span></p>
+                <Link to={`/insight/${result.id}`} className="text-blue-400 underline text-sm mt-2 inline-block">
+                  View Insights
+                </Link>
               </>
             )}
           </div>

@@ -9,6 +9,7 @@ import MatchHistory from './components/MatchHistory';
 import Navbar from './components/Navbar';
 import LandingPage from './components/LandingPage';
 import PrivateRoute from './components/PrivateRoute';
+import MatchInsight from './components/MatchInsight';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/insight/:id" element={<MatchInsight />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
