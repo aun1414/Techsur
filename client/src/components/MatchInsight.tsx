@@ -3,6 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { getAuthHeaders } from '../utils/auth';
 import { ArrowLeft } from 'lucide-react';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+
 
 function parseAnalysis(text: string) {
     const sections = {
@@ -72,7 +75,12 @@ const MatchInsight: React.FC = () => {
   if (!match) return <p className="text-gray-400 text-center">Loading...</p>;
   const parsed = parseAnalysis(match.analysis);
 
-
+  const getMatchLabel = (score: number) => {
+    if (score >= 85) return { label: "Excellent Match", color: "bg-green-700 text-green-200" };
+    if (score >= 60) return { label: "Good Match", color: "bg-yellow-600 text-yellow-100" };
+    return { label: "Needs Improvement", color: "bg-red-700 text-red-200" };
+  };
+  const matchLevel = getMatchLabel(match.matchScore);
   return (
     <div className="min-h-screen bg-black text-white p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
@@ -83,8 +91,25 @@ const MatchInsight: React.FC = () => {
 
       <h1 className="text-3xl font-bold">Match Insights</h1>
       
-      <div className="space-y-2">
-        <p><strong>Match Score:</strong> {match.matchScore}%</p>
+      <div className="flex flex-col items-center mt-6 mb-4">
+      <p className="text-2xl font-extrabold tracking-tight text-white mb-2">Match Score</p>
+      <div className="w-40 h-40 drop-shadow-lg">
+        <CircularProgressbar
+          value={match.matchScore}
+          text={`${match.matchScore.toFixed(0)}%`}
+          styles={buildStyles({
+            pathColor: match.matchScore > 75 ? '#4ade80' : match.matchScore > 50 ? '#facc15' : '#f87171',
+            textColor: 'white',
+            trailColor: '#27272a',
+            textSize: '18px',
+          })}
+        />
+      </div>
+        
+        <span className={`mt-2 px-3 py-1 rounded-full text-sm font-semibold ${matchLevel.color}`}>
+          {matchLevel.label}
+        </span>
+
         <p><strong>Resume File:</strong> {match.resumeFile}</p>
         <p><strong>Job File:</strong> {match.jobFile}</p>
         <p className="text-sm text-gray-400">Uploaded: {new Date(match.timestamp).toLocaleString()}</p>

@@ -19,13 +19,30 @@ const MatchHistory: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [scoreFilter, setScoreFilter] = useState<string>('all');
+  const [jobFilter, setJobFilter] = useState<string>('all');
   const itemsPerPage = 5;
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedMatches = history.slice(startIndex, endIndex);
+  const filteredMatches = history.filter(match => {
+    let scoreMatch = true;
+    let jobMatch = true;
+  
+    if (scoreFilter === 'high') scoreMatch = match.matchScore >= 80;
+    else if (scoreFilter === 'medium') scoreMatch = match.matchScore >= 60 && match.matchScore < 80;
+    else if (scoreFilter === 'low') scoreMatch = match.matchScore < 60;
+  
+    if (jobFilter !== 'all') jobMatch = match.jobFile === jobFilter;
+  
+    return scoreMatch && jobMatch;
+  });
+  
+  const paginatedMatches = filteredMatches.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredMatches.length / itemsPerPage);
+  
 
-  const totalPages = Math.ceil(history.length / itemsPerPage);
+  
 
 
   useEffect(() => {
@@ -67,6 +84,7 @@ const MatchHistory: React.FC = () => {
   };
   
   return (
+    
     <div className="min-h-screen bg-black text-white px-4 py-10">
       <div className="max-w-3xl mx-auto space-y-6">
         <h2 className="text-3xl font-bold text-center">Your Match History</h2>
@@ -77,7 +95,36 @@ const MatchHistory: React.FC = () => {
         {!loading && history.length === 0 && (
           <p className="text-center text-gray-500">No matches found yet.</p>
         )}
+        
+        <div className="flex flex-wrap gap-4 items-center justify-between bg-zinc-800 p-4 rounded-md mb-6">
+          <div>
+            <label className="text-sm text-gray-400 mr-2">Filter by Score:</label>
+            <select
+              className="bg-black border border-zinc-700 text-white px-2 py-1 text-sm rounded"
+              value={scoreFilter}
+              onChange={(e) => setScoreFilter(e.target.value)}
+            >
+              <option value="all">All</option>
+              <option value="high">80% and above</option>
+              <option value="medium">60% - 79%</option>
+              <option value="low">Below 60%</option>
+            </select>
+          </div>
 
+          <div>
+            <label className="text-sm text-gray-400 mr-2">Filter by Job File:</label>
+            <select
+              className="bg-black border border-zinc-700 text-white px-2 py-1 text-sm rounded"
+              value={jobFilter}
+              onChange={(e) => setJobFilter(e.target.value)}
+            >
+              <option value="all">All</option>
+              {Array.from(new Set(history.map(match => match.jobFile))).map((job, idx) => (
+                <option key={idx} value={job}>{job}</option>
+              ))}
+            </select>
+          </div>
+        </div>
         <div className="space-y-4">
           {paginatedMatches.map((match) => (
             <div key={match.id} className="bg-zinc-900 border border-zinc-800 p-4 rounded-lg relative shadow-sm">
