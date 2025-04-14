@@ -40,6 +40,12 @@ public class AuthController {
             signupRequest.getFullName()
         );
 
+        if (signupRequest.getEmail().equalsIgnoreCase("admin@example.com")) {
+            newUser.setRole(User.Role.ADMIN);
+        } else {
+            newUser.setRole(User.Role.USER);
+        }
+
         userRepository.save(newUser);
         return "User registered successfully!";
     }
