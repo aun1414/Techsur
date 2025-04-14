@@ -7,6 +7,10 @@ import com.techsur.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.web.bind.annotation.*;
 
 import com.techsur.server.dto.LoginRequest;
@@ -51,26 +55,35 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail())
             .orElse(null);
 
         if (user == null) {
-            return "User not found!";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
         }
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            return "Invalid password!";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password!");
         }
 
         try {
             String token = jwtUtil.generateToken(user.getEmail());
-            return token;
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("email", user.getEmail());
+            response.put("role", user.getRole().name());
+
+            return ResponseEntity.ok(response);
+
         } catch (Exception e) {
-            e.printStackTrace();  // Print full error in console
-            return "Token generation failed: " + e.getMessage();
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Token generation failed: " + e.getMessage());
         }
     }
+
 
     @GetMapping("/me")
     public String getCurrentUser() {

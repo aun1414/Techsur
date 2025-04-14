@@ -16,7 +16,9 @@ const Login: React.FC = () => {
         password,
       });
 
-      localStorage.setItem('token', response.data); // Save JWT
+      localStorage.setItem('token', response.data.token); // Save JWT
+      localStorage.setItem("userEmail", response.data.email); // optional
+      localStorage.setItem("userRole", response.data.role);   // 👈 store role here
       navigate('/upload'); // Go to Upload page
     } catch (err) {
       console.error(err);

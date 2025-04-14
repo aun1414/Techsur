@@ -10,6 +10,8 @@ import Navbar from './components/Navbar';
 import LandingPage from './components/LandingPage';
 import PrivateRoute from './components/PrivateRoute';
 import MatchInsight from './components/MatchInsight';
+import AdminPanel from './components/AdminPanel';
+
 
 function App() {
   return (
@@ -31,6 +33,14 @@ function App() {
           element={
             <PrivateRoute>
               <MatchHistory />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute>
+              <AdminPanel />
             </PrivateRoute>
           }
         />

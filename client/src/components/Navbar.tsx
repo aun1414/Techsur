@@ -4,9 +4,13 @@ import { Link, useNavigate } from 'react-router-dom';
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const userRole = localStorage.getItem('userRole');
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userRole');
+    
     navigate('/login');
   };
 
@@ -22,6 +26,9 @@ const Navbar: React.FC = () => {
         <div className="space-x-6 text-sm">
           {token ? (
             <>
+              {userRole === 'ADMIN' && (
+                <Link to="/admin" className="hover:text-blue-400 transition">Admin Dashboard</Link>
+              )}
               <Link to="/upload" className="hover:text-blue-400 transition">Upload</Link>
               <Link to="/history" className="hover:text-blue-400 transition">History</Link>
               <button onClick={handleLogout} className="hover:text-red-400 transition">Logout</button>
