@@ -1,33 +1,31 @@
-package com.techsur.server.model;
+package com.techsur.server.archive;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "resume_uploads")
-public class ResumeUpload {
+@Table(name = "job_uploads")
+public class JobUpload {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String email;
-
     private String fileName;
-
     private String filePath;
-
     private LocalDateTime uploadTime;
 
-    public ResumeUpload() {}
+    public JobUpload() {}
 
-    public ResumeUpload(String email, String fileName, String filePath, LocalDateTime uploadTime) {
+    public JobUpload(String email, String fileName, String filePath, LocalDateTime uploadTime) {
         this.email = email;
         this.fileName = fileName;
         this.filePath = filePath;
         this.uploadTime = uploadTime;
     }
 
+    // Getters & Setters
 
     public Long getId() {
         return id;
@@ -69,3 +67,4 @@ public class ResumeUpload {
         this.uploadTime = uploadTime;
     }
 }
+

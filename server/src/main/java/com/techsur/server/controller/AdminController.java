@@ -11,12 +11,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.techsur.server.model.JobUpload;
 import com.techsur.server.model.MatchResult;
 import com.techsur.server.repository.MatchResultRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+
+@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Admin", description = "Admin-only endpoints for user and system management")
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -26,14 +32,22 @@ public class AdminController {
 
     @Autowired
     private MatchResultRepository matchResultRepository;
-
+    @Operation(summary = "Get all registered users (admin only)")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "List of users"),
+        @ApiResponse(responseCode = "403", description = "Forbidden")
+    })
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('ADMIN')") 
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userRepository.findAll();
         return ResponseEntity.ok(users);
     }
-
+    @Operation(summary = "Get system stats (total users, matches, top skills)")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Stats returned successfully"),
+        @ApiResponse(responseCode = "403", description = "Forbidden")
+    })
     @GetMapping("/stats")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Map<String, Object>> getSystemStats() {
@@ -80,6 +94,12 @@ public class AdminController {
 
         return ResponseEntity.ok(stats);
     }
+    @Operation(summary = "Delete a user by ID (admin only)")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "User deleted successfully"),
+        @ApiResponse(responseCode = "403", description = "Admins cannot delete themselves"),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
     @DeleteMapping("/users/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {

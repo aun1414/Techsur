@@ -1,4 +1,4 @@
-package com.techsur.server.controller;
+package com.techsur.server.archive;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

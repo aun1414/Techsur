@@ -1,4 +1,4 @@
-package com.techsur.server.repository;
+package com.techsur.server.archive;
 
 import com.techsur.server.model.ResumeUpload;
 import org.springframework.data.jpa.repository.JpaRepository;
