@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Hasni1414???
+      POSTGRES_DB: techsurdb
+    ports:
+      - "5432:5432"
+
+  server:
+    build:
+      context: ./server  
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/techsurdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Hasni1414???
+    ports:
+      - "8080:8080"
+
+  ai:
+    build:
+      context: ./ai-service
+    ports:
+      - "5000:5000"
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY}

@@ -67,7 +67,7 @@ public class MatchController {
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
             // Prepare the request to Flask microservice
-            String flaskUrl = "http://localhost:5000/match";
+            String flaskUrl = "http://ai:5000/match";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
