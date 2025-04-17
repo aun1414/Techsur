@@ -1,37 +1,67 @@
-name: Deploy to Amazon ECR
+name: Deploy Spring Boot & Flask AI to Amazon ECR
 
 on:
   push:
-    branches: [main] 
+    branches: [main]  # change to master if needed
 
 jobs:
-  deploy:
-    name: Build and Push to ECR
+  backend:
+    name: Build and Push Spring Boot Backend
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Log in to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+    - name: Login to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and Push Docker image
-        env:
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-          IMAGE_TAG: latest
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./server
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+    - name: Build and Push Spring Boot Docker image
+      env:
+        ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+        ECR_REPOSITORY: ${{ secrets.ECR_REPO_BACKEND }}
+        IMAGE_TAG: latest
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./server
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+  ai:
+    name: Build and Push Flask AI Microservice
+    runs-on: ubuntu-latest
+    needs: backend  # runs after backend job
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build and Push Flask AI Docker image
+      env:
+        ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+        ECR_REPOSITORY: ${{ secrets.ECR_REPO_AI }}
+        IMAGE_TAG: latest
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./ai-service
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
