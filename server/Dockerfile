@@ -23,4 +23,4 @@ COPY --from=builder /app/target/*.jar app.jar
 COPY wait-for-postgres.sh .
 RUN chmod +x wait-for-postgres.sh
 
-ENTRYPOINT ["./wait-for-postgres.sh", "db", "java", "-jar", "app.jar"]
+ENTRYPOINT ["./wait-for-postgres.sh", "techsurdb.czygggcccjdu.us-east-2.rds.amazonaws.com", "java", "-jar", "app.jar"]
