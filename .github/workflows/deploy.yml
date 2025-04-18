@@ -34,6 +34,16 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./server
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+    
+    - name: Force New ECS Deployment (Spring Boot)
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        cluster: resume-cluster
+        service: springboot-service
+        task-definition: Springboot-task
+        force-new-deployment: true
+      
+
 
   ai:
     name: Build and Push Flask AI Microservice
@@ -65,3 +75,11 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./ai-service
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+    
+    - name: Force New ECS Deployment (Flask AI)
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        cluster: resume-cluster
+        service: flask-ai-service
+        task-definition: FlaskAI-task
+        force-new-deployment: true
