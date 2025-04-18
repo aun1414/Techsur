@@ -40,7 +40,7 @@ jobs:
       with:
         cluster: resume-cluster
         service: springboot-service
-        task-definition: Springboot-task
+        task-definition: arn:aws:ecs:us-east-2:339712901736:task-definition/Springboot-task:6
         force-new-deployment: true
       
 
@@ -81,5 +81,5 @@ jobs:
       with:
         cluster: resume-cluster
         service: flask-ai-service
-        task-definition: FlaskAI-task
+        task-definition: arn:aws:ecs:us-east-2:339712901736:task-definition/FlaskAI-task:3
         force-new-deployment: true
