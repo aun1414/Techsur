@@ -66,7 +66,7 @@ const MatchHistory: React.FC = () => {
   const handleDelete = async (id: number) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:8080/api/match/${id}`,{
+      await axios.delete(`http://resume-lb-1263142309.us-east-2.elb.amazonaws.com/api/match/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
         }

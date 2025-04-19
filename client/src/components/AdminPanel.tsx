@@ -18,7 +18,7 @@ const AdminPanel: React.FC = () => {
   const [stats, setStats] = useState<any>(null);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/admin/stats', {
+    axios.get('http://resume-lb-1263142309.us-east-2.elb.amazonaws.com/api/admin/stats', {
         headers: getAuthHeaders()
     })
     .then(res => setStats(res.data))
@@ -26,7 +26,7 @@ const AdminPanel: React.FC = () => {
     }, []);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/admin/users', {
+    axios.get('http://resume-lb-1263142309.us-east-2.elb.amazonaws.com/api/admin/users', {
       headers: getAuthHeaders()
     })
     .then(res => {
@@ -41,7 +41,7 @@ const AdminPanel: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
-      await axios.delete(`http://localhost:8080/api/admin/users/${id}`, {
+      await axios.delete(`http://resume-lb-1263142309.us-east-2.elb.amazonaws.com/api/admin/users/${id}`, {
         headers: getAuthHeaders()
       });
       setUsers(users.filter(u => u.id !== id));
