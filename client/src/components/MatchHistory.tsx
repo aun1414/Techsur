@@ -48,7 +48,7 @@ const MatchHistory: React.FC = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/match/history', {
+        const response = await axios.get('http://resume-lb-1263142309.us-east-2.elb.amazonaws.com/api/match/api/match/history', {
           headers: getAuthHeaders(),
         });
         setHistory(response.data);
