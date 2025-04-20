@@ -84,3 +84,10 @@ This project is built to feel like a real-world tool you'd actually use during a
 - Easily deployable on AWS with ECS + RDS  
 - Swagger UI is included for testing backend endpoints  
 
+## Live Demo
+
+Try it here 👉 [Resume Screener](http://resume-frontend-bucket.s3-website.us-east-2.amazonaws.com/)
+
+  Admin Credentials:
+- Email: admin@example.com
+- Password: admin123
