@@ -48,6 +48,12 @@ This project is built to feel like a real-world tool you'd actually use during a
 
 ---
 
+## Architecture
+
+![Capture](https://github.com/user-attachments/assets/7185504e-e013-4773-a785-4f8c68da4cf3)
+
+---
+
 ## Screenshots
 
 ### Homescreen
