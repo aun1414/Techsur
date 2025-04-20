@@ -71,8 +71,9 @@ This project is built to feel like a real-world tool you'd actually use during a
 
 ![ss6](https://github.com/user-attachments/assets/cde2023c-6e3e-4ccc-962d-f4ea954f690f)
 
+### Swagger
 
-
+![Capture](https://github.com/user-attachments/assets/9b6ea509-4286-465f-abdb-de8bf5688225)
 
 ---
 
