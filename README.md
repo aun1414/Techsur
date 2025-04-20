@@ -97,3 +97,5 @@ Try it here 👉 [Resume Screener](http://resume-frontend-bucket.s3-website.us-e
   Admin Credentials:
 - Email: admin@example.com
 - Password: admin123
+
+  Swagger can be accesed at -> [Swagger](http://resume-lb-1263142309.us-east-2.elb.amazonaws.com/swagger-ui/index.html)
