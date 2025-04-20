@@ -56,13 +56,24 @@ def extract_docx_text(path):
 
 def analyze_with_gemini(resume_text, job_text):
     prompt = f"""
-You are an expert resume evaluator. Given the resume and job description below, do the following:
+You are an expert resume evaluator. Given the resume and job description below, do the following in this exact format:
 
-1. Provide a short summary analyzing the candidate's **fit** for the job (strengths & weaknesses).
-2. List 5–10 **key skills** found in the resume that match the job.
-3. List any relevant **past experiences** or accomplishments.
-4. Extract important **keywords** from the job description.
-5. Provide a **1–sentence explanation** of the match score.
+**1. Candidate Fit Summary:**
+Provide a short summary analyzing the candidate's fit for the job. Include:
+**Strengths:** ...
+**Weaknesses:** ...
+
+**2. Key Matching Skills:**
+List 5–10 bullet points of key skills found in the resume that match the job.
+
+**3. Relevant Past Experiences/Accomplishments:**
+List bullet points highlighting past experience and notable achievements.
+
+**4. Keywords from Job Description:**
+List the most important keywords extracted from the job description.
+
+**5. Match Score Explanation:**
+Write a single sentence explaining the candidate's match score.
 
 Resume:
 {resume_text}
