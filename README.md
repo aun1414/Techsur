@@ -56,10 +56,13 @@ This project is built to feel like a real-world tool you'd actually use during a
 ### Admin dashboard
 ![ss7](https://github.com/user-attachments/assets/df90933d-2bfe-42f2-8e26-445105810a79)
 
+### Upload Page
 ![ss8](https://github.com/user-attachments/assets/e81e684c-9e81-426c-92e8-5d10fcbe6998)
 
+### Login Page
 ![ss2](https://github.com/user-attachments/assets/6c244a0f-39bf-4470-a466-b117662cbe98)
 
+### Match History Page
 ![ss4](https://github.com/user-attachments/assets/382e90e5-3718-4b1d-97f1-a972e2ef3c7f)
 
 ### Match insights
