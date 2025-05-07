@@ -16,7 +16,7 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://techsurdb.czygggcccjdu.us-east-2.rds.amazonaws.com:5432/postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://techsurdb.czygggcccjdu.us-east-2.rds.amazonaws.com:5432/techsurdb
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: Hasni1414???
     ports:
