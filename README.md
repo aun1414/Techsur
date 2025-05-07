@@ -18,7 +18,7 @@ This project is built to feel like a real-world tool you'd actually use during a
 - **Match History Dashboard** with role filtering  
 - Upload support for PDF/text resumes and job descriptions  
 - Clean, responsive UI with dark mode  
-- Fully containerized and ready for deployment  
+- Fully containerized and ready for deployment. 
 
 ---
 
