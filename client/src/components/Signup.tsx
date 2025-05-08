@@ -12,7 +12,7 @@ const Signup: React.FC = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://18.224.3.134:8080/api/auth/signup', {
+      const response = await axios.post('http://3.138.105.216:8080/api/auth/signup', {
         email,
         fullName,
         password,

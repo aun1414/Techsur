@@ -64,7 +64,7 @@ const MatchInsight: React.FC = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    axios.get(`http://18.224.3.134:8080/api/match/${id}`, {
+    axios.get(`http://3.138.105.216:8080/api/match/${id}`, {
       headers: getAuthHeaders(),
     })
     .then(res => setMatch(res.data))
