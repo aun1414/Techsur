@@ -14,7 +14,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**") // Allow all paths
-                        .allowedOrigins("http://http://resume-screener-frontend.s3-website.us-east-2.amazonaws.com/") // React dev server
+                        .allowedOrigins("http://resume-screener-frontend.s3-website.us-east-2.amazonaws.com/") // React dev server
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowCredentials(true); // needed if you send cookies
