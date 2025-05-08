@@ -22,7 +22,7 @@ const UploadForm: React.FC = () => {
     try {
       setLoading(true);
       setError('');
-      const response = await axios.post('http://18.191.140.83:8080/api/match', formData, {
+      const response = await axios.post('http://18.224.3.134:8080/api/match', formData, {
         headers: {
           ...getAuthHeaders(),
           'Content-Type': 'multipart/form-data',
