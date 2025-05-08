@@ -48,7 +48,7 @@ const MatchHistory: React.FC = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await axios.get('http://resume-lb-1263142309.us-east-2.elb.amazonaws.com/api/match/history', {
+        const response = await axios.get('http://18.191.140.83:8080/api/match/history', {
           headers: getAuthHeaders(),
         });
         setHistory(response.data);
@@ -66,7 +66,7 @@ const MatchHistory: React.FC = () => {
   const handleDelete = async (id: number) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://resume-lb-1263142309.us-east-2.elb.amazonaws.com/api/match/${id}`,{
+      await axios.delete(`http://18.191.140.83:8080/api/match/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
         }

@@ -11,7 +11,7 @@ const Login: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://resume-lb-1263142309.us-east-2.elb.amazonaws.com/api/auth/login', {
+      const response = await axios.post('http://18.191.140.83:8080/api/auth/login', {
         email,
         password,
       });
